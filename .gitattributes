@@ -1,0 +1,87 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Source code
+*.py text eol=lf
+*.pyi text eol=lf
+*.pyx text eol=lf
+*.pxd text eol=lf
+
+# Documentation
+*.md text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+
+# Configuration
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.json text eol=lf
+*.cfg text eol=lf
+*.ini text eol=lf
+.env* text eol=lf
+
+# Scripts
+*.sh text eol=lf
+*.bash text eol=lf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Docker
+Dockerfile text eol=lf
+docker-compose*.yml text eol=lf
+.dockerignore text eol=lf
+
+# Kubernetes
+*.k8s.yaml text eol=lf
+
+# Git
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# GitHub
+.github/**/*.md text eol=lf
+.github/**/*.yml text eol=lf
+
+# Binary files
+*.pkl binary
+*.pickle binary
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+*.pyc binary
+*.pyo binary
+*.pyd binary
+*.so binary
+*.dll binary
+*.dylib binary
+
+# Archives
+*.tar binary
+*.gz binary
+*.zip binary
+*.7z binary
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+
+# Export diff archives
+*.zip export-ignore
+*.tar.gz export-ignore
+
+# Ignore test files in exports
+tests/ export-ignore
+.github/ export-ignore
+docs/ export-ignore
+examples/ export-ignore
+
+# Linguist - help GitHub detect correct language statistics
+*.py linguist-language=Python
+docs/** linguist-documentation
+tests/** linguist-detectable=false
+examples/** linguist-detectable=false
