@@ -30,6 +30,11 @@ class Settings(BaseSettings):
     redis_port: int = 6379
     redis_password: str = ""
 
+    # Authentication
+    jwt_secret_key: str = "change-this-to-a-secure-random-key"
+    jwt_algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+
     # System Configuration
     enable_learning: bool = True
     enable_transparency: bool = True
