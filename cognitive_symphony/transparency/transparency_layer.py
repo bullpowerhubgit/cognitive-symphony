@@ -45,9 +45,7 @@ class TransparencyTracker:
 
         logger.info("transparency_tracker_initialized", log_dir=str(self.log_dir))
 
-    def log_decision(
-        self, decision: OrchestrationDecision, context: Dict[str, Any]
-    ) -> None:
+    def log_decision(self, decision: OrchestrationDecision, context: Dict[str, Any]) -> None:
         """
         Loggt eine Orchestrierungs-Entscheidung
 
@@ -136,7 +134,9 @@ class TransparencyTracker:
         }
 
         # Speichere Report
-        report_path = self.log_dir / f"report_{task_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        report_path = (
+            self.log_dir / f"report_{task_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
         with open(report_path, "w") as f:
             json.dump(report, f, indent=2)
 
@@ -252,6 +252,5 @@ class PerformanceMonitor:
     def get_all_metrics(self) -> Dict[str, Dict[str, float]]:
         """Gibt alle Performance-Metriken zurück"""
         return {
-            metric_name: self.get_statistics(metric_name)
-            for metric_name in self.metrics.keys()
+            metric_name: self.get_statistics(metric_name) for metric_name in self.metrics.keys()
         }

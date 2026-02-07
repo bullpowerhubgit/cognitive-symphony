@@ -69,9 +69,7 @@ class AgentFleet:
             AgentType.HUMAN_INTERFACE: HumanInterfaceAgent(self.llm),
         }
 
-    async def execute_task(
-        self, task: Task, selected_agents: List[AgentType]
-    ) -> Any:
+    async def execute_task(self, task: Task, selected_agents: List[AgentType]) -> Any:
         """
         Führt eine Aufgabe mit den ausgewählten Agenten aus
 

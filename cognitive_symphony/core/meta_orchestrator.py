@@ -138,9 +138,7 @@ class MetaOrchestrator:
 
         return subtasks
 
-    def _parse_subtasks_from_response(
-        self, response: str, parent_task_id: str
-    ) -> List[Task]:
+    def _parse_subtasks_from_response(self, response: str, parent_task_id: str) -> List[Task]:
         """
         Parst die LLM-Antwort und erstellt Task-Objekte
 
@@ -159,10 +157,7 @@ class MetaOrchestrator:
                 continue
 
             # Erkennen von Task-Beschreibungen (vereinfacht)
-            if any(
-                keyword in line.lower()
-                for keyword in ["aufgabe", "schritt", "task", "step"]
-            ):
+            if any(keyword in line.lower() for keyword in ["aufgabe", "schritt", "task", "step"]):
                 if current_subtask:
                     subtasks.append(current_subtask)
 
@@ -266,9 +261,7 @@ class MetaOrchestrator:
         )
 
         # Parse Response
-        selected_agents, reasoning, confidence = self._parse_agent_selection(
-            response.content
-        )
+        selected_agents, reasoning, confidence = self._parse_agent_selection(response.content)
 
         decision = OrchestrationDecision(
             task_id=task.id,
@@ -288,9 +281,7 @@ class MetaOrchestrator:
 
         return selected_agents, decision
 
-    def _parse_agent_selection(
-        self, response: str
-    ) -> Tuple[List[AgentType], str, float]:
+    def _parse_agent_selection(self, response: str) -> Tuple[List[AgentType], str, float]:
         """Parst die Agent-Auswahl aus der LLM-Antwort"""
         selected_agents = []
         reasoning = response
@@ -406,9 +397,7 @@ class MetaOrchestrator:
     def get_performance_metrics(self) -> Dict[str, Any]:
         """Gibt Performance-Metriken des Orchestrators zurück"""
         total_decisions = len(self.decision_history)
-        successful_decisions = sum(
-            1 for d in self.decision_history if d.outcome == "success"
-        )
+        successful_decisions = sum(1 for d in self.decision_history if d.outcome == "success")
 
         return {
             "total_decisions": total_decisions,

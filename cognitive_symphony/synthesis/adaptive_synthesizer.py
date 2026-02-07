@@ -180,9 +180,7 @@ class AdaptiveAgentSynthesizer:
 
         return synthesized_agent
 
-    async def _find_suitable_base_agents(
-        self, required_capabilities: List[str]
-    ) -> List[AgentType]:
+    async def _find_suitable_base_agents(self, required_capabilities: List[str]) -> List[AgentType]:
         """
         Findet Basis-Agenten, die die benötigten Capabilities haben
 
@@ -288,9 +286,7 @@ class AdaptiveAgentSynthesizer:
 
         return {"name": name, "description": description}
 
-    def _combine_capabilities(
-        self, base_agents: List[AgentType]
-    ) -> List[AgentCapability]:
+    def _combine_capabilities(self, base_agents: List[AgentType]) -> List[AgentCapability]:
         """
         Kombiniert Capabilities mehrerer Basis-Agenten
 
@@ -374,9 +370,7 @@ class AdaptiveAgentSynthesizer:
         )
 
         # Parse capabilities
-        capabilities = [
-            cap.strip() for cap in response.content.split(",") if cap.strip()
-        ]
+        capabilities = [cap.strip() for cap in response.content.split(",") if cap.strip()]
 
         return capabilities[:5]  # Max 5 Capabilities
 
