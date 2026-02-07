@@ -125,9 +125,7 @@ class MemorySystem:
             tags=tags,
         )
 
-    def store_workflow(
-        self, workflow: Dict[str, Any], performance: float, tags: List[str]
-    ) -> None:
+    def store_workflow(self, workflow: Dict[str, Any], performance: float, tags: List[str]) -> None:
         """
         Speichert einen Workflow im prozeduralen Gedächtnis
 
@@ -152,9 +150,7 @@ class MemorySystem:
             performance=performance,
         )
 
-    def recall_episodes(
-        self, query: Optional[str] = None, limit: int = 10
-    ) -> List[MemoryEntry]:
+    def recall_episodes(self, query: Optional[str] = None, limit: int = 10) -> List[MemoryEntry]:
         """
         Ruft relevante Episoden ab
 
@@ -196,15 +192,11 @@ class MemorySystem:
         knowledge = self.semantic_memory
 
         if tags:
-            knowledge = [
-                k for k in knowledge if any(tag in k.tags for tag in tags)
-            ]
+            knowledge = [k for k in knowledge if any(tag in k.tags for tag in tags)]
 
         return sorted(knowledge, key=lambda k: k.importance, reverse=True)
 
-    def recall_workflows(
-        self, min_performance: float = 0.0, limit: int = 10
-    ) -> List[MemoryEntry]:
+    def recall_workflows(self, min_performance: float = 0.0, limit: int = 10) -> List[MemoryEntry]:
         """
         Ruft erfolgreiche Workflows ab
 
@@ -236,9 +228,7 @@ class MemorySystem:
         """
         return dict(self.agent_performance_index)
 
-    def _calculate_importance(
-        self, task: Task, decisions: List[OrchestrationDecision]
-    ) -> float:
+    def _calculate_importance(self, task: Task, decisions: List[OrchestrationDecision]) -> float:
         """
         Berechnet die Wichtigkeit einer Episode
 
@@ -261,11 +251,7 @@ class MemorySystem:
         complexity_factor = min(len(decisions) * 0.1, 0.3)
 
         # Durchschnittliche Confidence
-        avg_confidence = (
-            sum(d.confidence for d in decisions) / len(decisions)
-            if decisions
-            else 0.5
-        )
+        avg_confidence = sum(d.confidence for d in decisions) / len(decisions) if decisions else 0.5
 
         # Outcome-Bonus
         outcome_factor = 0.2 if task.status.value == "completed" else 0.0
@@ -282,16 +268,12 @@ class MemorySystem:
 
         # Episodisches Gedächtnis - behalte nur wichtige oder neue
         self.episodic_memory = [
-            e
-            for e in self.episodic_memory
-            if e.timestamp > cutoff_date or e.importance > 0.7
+            e for e in self.episodic_memory if e.timestamp > cutoff_date or e.importance > 0.7
         ]
 
         # Semantisches Gedächtnis - behalte häufig genutzte oder wichtige
         self.semantic_memory = [
-            s
-            for s in self.semantic_memory
-            if s.access_count > 5 or s.importance > 0.6
+            s for s in self.semantic_memory if s.access_count > 5 or s.importance > 0.6
         ]
 
         logger.info("memory_cleanup_completed")

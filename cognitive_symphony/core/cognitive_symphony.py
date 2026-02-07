@@ -123,10 +123,8 @@ class CognitiveSymphony:
             agent_performance = self.memory_system.get_agent_performance_history()
 
             # Wähle optimale Agenten
-            selected_agents, decision = (
-                await self.meta_orchestrator.select_optimal_agents(
-                    subtask, agent_performance
-                )
+            selected_agents, decision = await self.meta_orchestrator.select_optimal_agents(
+                subtask, agent_performance
             )
 
             orchestration_decisions.append(decision)
@@ -144,9 +142,7 @@ class CognitiveSymphony:
 
                 # Lerne aus Erfolg
                 performance = 0.8  # Vereinfacht - würde in Produktion berechnet
-                await self.meta_orchestrator.learn_from_outcome(
-                    decision, "success", performance
-                )
+                await self.meta_orchestrator.learn_from_outcome(decision, "success", performance)
 
                 agent_interactions.append(
                     {
@@ -163,9 +159,7 @@ class CognitiveSymphony:
                 subtask.completed_at = datetime.now()
 
                 # Lerne aus Fehler
-                await self.meta_orchestrator.learn_from_outcome(
-                    decision, "failure", 0.2
-                )
+                await self.meta_orchestrator.learn_from_outcome(decision, "failure", 0.2)
 
                 agent_interactions.append(
                     {
@@ -190,9 +184,7 @@ class CognitiveSymphony:
 
         # 5. Self-Optimization
         if self.enable_learning:
-            await self.self_optimizer.optimize(
-                task_obj, subtasks, orchestration_decisions
-            )
+            await self.self_optimizer.optimize(task_obj, subtasks, orchestration_decisions)
 
         # 6. Learning Insights generieren
         learning_insights = self.meta_orchestrator.get_performance_metrics()
@@ -211,9 +203,7 @@ class CognitiveSymphony:
                 "subtasks_completed": len(
                     [s for s in subtasks if s.status == TaskStatus.COMPLETED]
                 ),
-                "subtasks_failed": len(
-                    [s for s in subtasks if s.status == TaskStatus.FAILED]
-                ),
+                "subtasks_failed": len([s for s in subtasks if s.status == TaskStatus.FAILED]),
             },
             execution_time=execution_time,
         )
@@ -239,9 +229,9 @@ class CognitiveSymphony:
                     {
                         "subtask": subtask.description,
                         "result": subtask.result,
-                        "agent": subtask.assigned_agent.value
-                        if subtask.assigned_agent
-                        else "unknown",
+                        "agent": (
+                            subtask.assigned_agent.value if subtask.assigned_agent else "unknown"
+                        ),
                     }
                 )
 
@@ -287,9 +277,7 @@ class CognitiveSymphony:
             return {"message": "Transparency layer is disabled"}
 
         # Hole alle relevanten Daten aus Memory
-        decisions = [
-            d for d in self.meta_orchestrator.decision_history if d.task_id == task_id
-        ]
+        decisions = [d for d in self.meta_orchestrator.decision_history if d.task_id == task_id]
 
         return {
             "task_id": task_id,

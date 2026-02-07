@@ -33,9 +33,7 @@ class AuthService:
 
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
         """Überprüft ein Passwort gegen den Hash"""
-        return bcrypt.checkpw(
-            plain_password.encode("utf-8"), hashed_password.encode("utf-8")
-        )
+        return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
 
     def hash_password(self, password: str) -> str:
         """Erstellt einen Passwort-Hash"""
