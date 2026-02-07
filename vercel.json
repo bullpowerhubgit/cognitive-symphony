@@ -1,0 +1,85 @@
+{
+  "version": 2,
+  "name": "digistore24-automation-suite",
+  "buildCommand": "npm run build",
+  "framework": "nextjs",
+  "regions": ["fra1"],
+
+  "crons": [
+    {
+      "path": "/api/cron/sync-sales",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/sync-products",
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/daily-report",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/backup",
+      "schedule": "0 0 * * *"
+    }
+  ],
+
+  "rewrites": [
+    {
+      "source": "/api/v1/:path*",
+      "destination": "/api/:path*"
+    }
+  ],
+
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "X-Requested-With, Content-Type, Authorization"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ],
+
+  "functions": {
+    "api/**/*.{js,ts}": {
+      "memory": 1024,
+      "maxDuration": 30
+    },
+    "api/cron/**/*.{js,ts}": {
+      "memory": 3008,
+      "maxDuration": 300
+    }
+  }
+}

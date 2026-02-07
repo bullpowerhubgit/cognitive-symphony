@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String
+  role          String    @default("user")
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  products      Product[]
+  sales         Sale[]
+
+  @@map("users")
+}
+
+model Product {
+  id              String    @id @default(cuid())
+  digistoreId     String?   @unique
+  name            String
+  description     String?   @db.Text
+  price           Decimal   @db.Decimal(10, 2)
+  currency        String    @default("EUR")
+  status          String    @default("active")
+  category        String?
+
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+
+  sales           Sale[]
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("products")
+}
+
+model Sale {
+  id              String    @id @default(cuid())
+  digistoreId     String?   @unique
+  transactionId   String    @unique
+
+  productId       String
+  product         Product   @relation(fields: [productId], references: [id])
+
+  customerId      String?
+  customer        Customer? @relation(fields: [customerId], references: [id])
+
+  affiliateId     String?
+  affiliate       Affiliate? @relation(fields: [affiliateId], references: [id])
+
+  amount          Decimal   @db.Decimal(10, 2)
+  currency        String    @default("EUR")
+  status          String    @default("completed")
+  paymentMethod   String?
+
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("sales")
+}
+
+model Customer {
+  id              String    @id @default(cuid())
+  digistoreId     String?   @unique
+  email           String    @unique
+  firstName       String?
+  lastName        String?
+  phone           String?
+  country         String?
+
+  sales           Sale[]
+
+  lifetimeValue   Decimal?  @db.Decimal(10, 2)
+  totalOrders     Int       @default(0)
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("customers")
+}
+
+model Affiliate {
+  id              String    @id @default(cuid())
+  digistoreId     String?   @unique
+  email           String    @unique
+  name            String?
+  status          String    @default("active")
+  tier            String    @default("bronze")
+
+  sales           Sale[]
+  commissions     Commission[]
+
+  totalEarnings   Decimal   @db.Decimal(10, 2) @default(0)
+  totalSales      Int       @default(0)
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("affiliates")
+}
+
+model Commission {
+  id              String    @id @default(cuid())
+
+  affiliateId     String
+  affiliate       Affiliate @relation(fields: [affiliateId], references: [id])
+
+  amount          Decimal   @db.Decimal(10, 2)
+  currency        String    @default("EUR")
+  status          String    @default("pending")
+  payoutDate      DateTime?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("commissions")
+}
+
+model WebhookLog {
+  id              String    @id @default(cuid())
+  source          String
+  eventType       String
+  payload         Json
+  status          String    @default("received")
+
+  processedAt     DateTime?
+  error           String?   @db.Text
+
+  createdAt       DateTime  @default(now())
+
+  @@index([source, createdAt])
+  @@map("webhook_logs")
+}

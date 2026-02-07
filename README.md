@@ -1,257 +1,157 @@
-# 🎼 Cognitive Symphony
+# Digistore24 Pro Automation Suite v3.0
 
-[![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/bullpull02/cognitive-symphony?style=social)](https://github.com/bullpull02/cognitive-symphony)
-[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Status](https://img.shields.io/badge/status-alpha-orange.svg)]()
+Das ultimative All-in-One Automation Tool für Digistore24 mit KI-Integration.
 
-Ein selbstoptimierendes Meta-Orchestrations-System für Multi-Agent-KI-Ökosysteme
+## Features
 
-## 🌟 Vision
+- Vollständige Digistore24 Integration
+- 30+ Automatische Cron-Jobs
+- KI-gestützte Analytics
+- Advanced Dashboard
+- E-Mail Automation
+- Affiliate Management
+- Real-Time Webhooks
+- Production-Ready
 
-Cognitive Symphony ist nicht nur ein Multi-Agent-System – es ist ein **metakognitives KI-Ökosystem**, das:
+## Quick Start
 
-- 🧠 **Über sein eigenes Denken nachdenkt** (Metakognition)
-- 📈 **Sich kontinuierlich selbst verbessert** durch Reinforcement Learning
-- 🎯 **Dynamisch spezialisierte Agenten orchestriert**
-- 🔄 **Aus jedem Erfolg und Fehler lernt**
-- 🚀 **Neue Strategien entwickelt**, die nie explizit programmiert wurden
-
-## 🏗️ Architektur
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    META-ORCHESTRATOR                         │
-│  (GPT-4/Claude 3.5 - Das orchestrierende Gehirn)            │
-│  • Task Decomposition  • Agent Selection  • Self-Learning   │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-        ┌──────────────────┴──────────────────┐
-        ▼                                      ▼
-┌──────────────────┐              ┌──────────────────────┐
-│ AGENT FLEET      │              │ MEMORY SYSTEM        │
-├──────────────────┤              ├──────────────────────┤
-│ • Research       │              │ • Episodic Memory    │
-│ • Code           │◄────────────►│ • Semantic Memory    │
-│ • Analysis       │              │ • Procedural Memory  │
-│ • Creative       │              │ • Graph Database     │
-│ • Security       │              │ • Vector Store       │
-│ • Optimization   │              └──────────────────────┘
-│ • Human-Interface│                       ▲
-└──────────────────┘                       │
-        │                                  │
-        ▼                                  │
-┌─────────────────────────────────────────┴─────┐
-│       SELF-OPTIMIZATION ENGINE                 │
-│  • A/B Testing  • RL  • Evolutionary Algo      │
-│  • Predictive Analytics  • Performance Metrics │
-└────────────────────────────────────────────────┘
-```
-
-## 🎯 Kernfeatures
-
-### 1️⃣ Meta-Orchestrator (Das Gehirn)
-- Zentraler Koordinator mit GPT-4/Claude 3.5 Sonnet
-- Intelligente Task-Dekomposition
-- Dynamische Agenten-Auswahl basierend auf Kontext
-- Reinforcement Learning aus vergangenen Entscheidungen
-- Adaptive Team-Neubildung bei suboptimaler Performance
-
-### 2️⃣ Spezialisierte Agenten-Flotte
-- **Research Agent** 🔍: Web-Recherche, Wissensbasis-Erstellung
-- **Code Agent** 💻: Multi-Language Code-Entwicklung, Testing, Debugging
-- **Analysis Agent** 📊: Datenanalyse, Mustererkennung, Visualisierung
-- **Creative Agent** 🎨: Content-Generierung, Design, Konzepte
-- **Security Agent** 🔒: Sicherheitsüberwachung, Threat-Detection
-- **Optimization Agent** ⚡: Workflow-Optimierung, Kostenreduktion
-- **Human-Interface Agent** 👤: Kommunikation, Feedback-Management
-
-### 3️⃣ Intelligentes Gedächtnis-System
-- **Episodisches Gedächtnis**: Erfolgreiche/gescheiterte Strategien
-- **Semantisches Gedächtnis**: Wissensdatenbank mit Vector-Embedding
-- **Prozedurales Gedächtnis**: Optimale Workflows und Agenten-Kombinationen
-- **Graph-Datenbank**: Langzeit-Kontexterhaltung
-
-### 4️⃣ Selbstoptimierungs-Engine
-- Kontinuierliches A/B-Testing verschiedener Strategien
-- Automatische Performance-Analyse
-- Evolutionäre Algorithmen für Strategieverbesserung
-- Predictive Analytics für optimale Agenten-Setups
-
-## 🚀 Innovation-Highlights
-
-### 🧬 Adaptive Agenten-Synthese
-On-the-fly Erstellung neuer spezialisierter Agenten durch Kombination bestehender Fähigkeiten
-
-### 🤝 Kollaboratives Lernen
-Agenten teilen Erkenntnisse und lernen voneinander - echter Wissenstransfer
-
-### ⚖️ Echtzeit-Konfliktlösung
-Automatische Moderation bei widersprüchlichen Empfehlungen durch gewichtete Entscheidungsfindung
-
-### 🌈 Multi-Modalität
-Nahtlose Verarbeitung von Text, Code, Bildern, Audio, Video und strukturierten Daten
-
-### 🔍 Transparenz-Layer
-Vollständige Protokollierung und Visualisierung aller Entscheidungen
-
-## 🛠️ Technologie-Stack
-
-### Frameworks
-- **LangGraph**: Komplexe Workflow-Orchestrierung mit zyklischen Abhängigkeiten
-- **CrewAI**: Kollaborative Agent-Teams
-- **AutoGen**: Multi-Agent-Konversationen
-
-### LLM-Integration
-- **GPT-4**: Komplexes Reasoning
-- **Claude 3.5 Sonnet**: Lange Kontexte, Code-Analyse
-- **Spezialisierte Open-Source-Modelle**: Task-spezifische Optimierung
-
-### Infrastruktur
-- **Vector-Datenbanken**: Pinecone/Weaviate für semantisches Gedächtnis
-- **Redis**: Echtzeit-State-Management
-- **Neo4j**: Graph-basierte Kontexterhaltung
-- **Kubernetes**: Skalierbare Agent-Deployments
-
-## 📦 Installation
+### Installation
 
 ```bash
-# Repository klonen
-git clone https://github.com/yourusername/cognitive-symphony.git
-cd cognitive-symphony
-
-# Virtual Environment erstellen
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
 # Dependencies installieren
-pip install -r requirements.txt
+npm install
 
-# Environment-Variablen konfigurieren
-cp .env.example .env
-# Fügen Sie Ihre API-Keys hinzu
+# .env.local erstellen
+cp .env.example .env.local
+
+# Secrets generieren
+openssl rand -base64 32  # Für NEXTAUTH_SECRET
+openssl rand -base64 32  # Für JWT_SECRET
+
+# Development Server
+npm run dev
 ```
 
-## 🎮 Quick Start
+Öffne: http://localhost:3000
 
-```python
-from cognitive_symphony import CognitiveSymphony
+### Datenbank Setup
 
-# System initialisieren
-symphony = CognitiveSymphony(
-    llm_provider="openai",  # oder "anthropic"
-    enable_learning=True,
-    enable_transparency=True
-)
+```bash
+# Prisma generieren
+npx prisma generate
 
-# Komplexe Aufgabe lösen
-result = await symphony.solve(
-    task="Entwickle eine vollständige E-Commerce-Lösung mit Sicherheitsanalyse",
-    optimization_level="high"
-)
+# Datenbank pushen (Development)
+npx prisma db push
 
-# Ergebnis analysieren
-print(result.solution)
-print(result.agent_interactions)
-print(result.learning_insights)
+# Prisma Studio (optional)
+npx prisma studio
 ```
 
-## 📚 Praxisbeispiel: Business-Lösung
+## Deployment auf Vercel
 
-```python
-# Szenario: Vollständige Business-Lösung entwickeln
-task = {
-    "objective": "Entwickle eine innovative SaaS-Lösung",
-    "requirements": [
-        "Marktanalyse",
-        "Technische Implementierung",
-        "Sicherheitsprüfung",
-        "Marketing-Materialien"
-    ]
-}
-
-result = await symphony.solve(task)
-
-# Das System orchestriert automatisch:
-# 1. Research Agent → Markt- und Wettbewerbsanalyse
-# 2. Analysis Agent → Chancen und Risiken identifizieren
-# 3. Code Agent → Prototyp entwickeln
-# 4. Security Agent → Schwachstellen prüfen
-# 5. Creative Agent → Marketing-Content erstellen
-# 6. Optimization Agent → Performance & Kosten optimieren
-# 7. Meta-Orchestrator → Koordination, Lernen, Anpassung
+1. **Repository auf GitHub pushen**
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/USERNAME/digistore24-automation.git
+git push -u origin main
 ```
 
-## 🎯 Wettbewerbsvorteile
+2. **Auf Vercel deployen**
+- Gehe zu https://vercel.com/new
+- Importiere dein Repository
+- Setze Environment Variables (siehe .env.example)
+- Deploy!
 
-### ✨ Einzigartigkeit
-- ✅ Selbstverbesserndes System (besser mit jeder Aufgabe)
-- ✅ Adaptive Agenten-Synthese (unübertroffene Flexibilität)
-- ✅ Transparente Entscheidungen (ethisch & nachvollziehbar)
+## Environment Variables
 
-### 📈 Skalierbarkeit
-- ✅ 3 bis 100+ Agenten skalierbar
-- ✅ Cloud-native & Edge-Computing-fähig
-- ✅ Horizontale und vertikale Skalierung
+Benötigte Variablen für Vercel:
 
-### 💡 Praktischer Nutzen
-- ✅ Löst komplexe, mehrdimensionale Probleme
-- ✅ 70-90% Reduktion menschlichen Aufwands
-- ✅ Demokratisiert Zugang zu KI-Expertise
+```env
+NEXTAUTH_SECRET=...
+JWT_SECRET=...
+DATABASE_URL=... (von Vercel Postgres)
+DIGISTORE_API_KEY=...
+DIGISTORE_API_SECRET=...
+```
 
-## 🔬 Warum Cognitive Symphony gewinnt
+## API Endpunkte
 
-Aktuelle Multi-Agent-Systeme sind **statisch** - vordefinierte Rollen, fixe Workflows.
+### Health Check
+```bash
+GET /api/health
+```
 
-**Cognitive Symphony** hebt sich durch **Metakognition** ab:
-- 🧠 Denkt über sein eigenes Denken nach
-- 🔄 Optimiert sich selbst
-- 💡 Entwickelt neue Strategien, die nie programmiert wurden
+### Products
+```bash
+GET /api/products
+POST /api/products
+```
 
-**Das ist der Unterschied zwischen einem Orchester, das eine Partitur spielt, und einem Orchester, das beim Spielen komponiert und sich dabei kontinuierlich verbessert.**
+### Sales
+```bash
+GET /api/sales
+```
 
-## 📊 Performance-Metriken
+### Analytics
+```bash
+GET /api/analytics
+```
 
-Das System trackt kontinuierlich:
-- Task-Erfolgsrate
-- Agent-Effektivität
-- Optimierungsgewinne
-- Lernfortschritt
-- Ressourcennutzung
+### Webhooks
+```bash
+POST /api/webhooks/digistore
+```
 
-## 🛡️ Sicherheit & Ethik
+### Cron Jobs
+```bash
+GET /api/cron/sync-sales
+GET /api/cron/sync-products
+GET /api/cron/daily-report
+GET /api/cron/backup
+```
 
-- Alle Agent-Interaktionen werden auditiert
-- Transparente Entscheidungsfindung
-- Human-in-the-loop bei kritischen Entscheidungen
-- Datenschutz-konforme Implementierung
+## Seiten
 
-## 🗺️ Roadmap
+- `/` - Homepage
+- `/dashboard` - Haupt-Dashboard
+- `/dashboard/analytics` - Erweiterte Analytics
+- `/dashboard/settings` - Einstellungen
 
-- [x] Meta-Orchestrator Core
-- [x] 7 spezialisierte Agenten
-- [x] Gedächtnis-System (3-schichtig)
-- [x] Selbstoptimierungs-Engine
-- [ ] Blockchain-basiertes Audit-Trail
-- [ ] Edge-Computing-Deployment
-- [ ] Multi-Tenant-Architektur
-- [ ] Visual Agent-Designer
+## Development
 
-## 📄 Lizenz
+```bash
+# Development Server
+npm run dev
 
-MIT License - siehe [LICENSE](LICENSE)
+# Build
+npm run build
 
-## 🤝 Contributing
+# Production Server
+npm start
 
-Wir freuen uns über Beiträge! Siehe [CONTRIBUTING.md](CONTRIBUTING.md)
+# Type Check
+npm run type-check
 
-## 📧 Kontakt
+# Linting
+npm run lint
+```
 
-- GitHub: [cognitive-symphony](https://github.com/bullpull02/cognitive-symphony)
-- Email: bullpull02@gmail.com
-- Developer: bullpull02
+## Sicherheit
 
----
+- HTTPS/SSL (via Vercel)
+- CORS Protection
+- XSS Protection
+- CSRF Protection
+- Rate Limiting
+- Webhook Signature Verification
 
-**Cognitive Symphony** - Die Zukunft ist nicht nur intelligent, sie lernt zu lernen. 🎼✨
+## Lizenz
+
+MIT
+
+## Credits
+
+Erstellt mit Next.js 14, TypeScript, Tailwind CSS & Prisma
