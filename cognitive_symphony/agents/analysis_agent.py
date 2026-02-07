@@ -2,7 +2,8 @@
 Analysis Agent - Spezialisiert auf Datenanalyse und Mustererkennung
 """
 
-from typing import Any, List
+from typing import Any
+
 from langchain.prompts import ChatPromptTemplate
 
 from cognitive_symphony.agents.base_agent import BaseAgent
@@ -15,7 +16,7 @@ class AnalysisAgent(BaseAgent):
     def __init__(self, llm: Any):
         super().__init__(AgentType.ANALYSIS, llm)
 
-    def _initialize_capabilities(self) -> List[AgentCapability]:
+    def _initialize_capabilities(self) -> list[AgentCapability]:
         return [
             AgentCapability(
                 name="Data Analysis",
@@ -50,14 +51,14 @@ class AnalysisAgent(BaseAgent):
                 (
                     "system",
                     """Du bist ein Analysis Agent, spezialisiert auf Datenanalyse.
-                    
+
                     Fähigkeiten:
                     - Statistische Datenanalyse
                     - Mustererkennung und Trend-Analyse
                     - Predictive Analytics und Machine Learning
                     - Datenvisualisierung
                     - Business Intelligence
-                    
+
                     Erstelle fundierte, datengestützte Analysen mit klaren Insights.
                     """,
                 ),

@@ -2,7 +2,8 @@
 Human Interface Agent - Spezialisiert auf Kommunikation mit Menschen
 """
 
-from typing import Any, List
+from typing import Any
+
 from langchain.prompts import ChatPromptTemplate
 
 from cognitive_symphony.agents.base_agent import BaseAgent
@@ -15,7 +16,7 @@ class HumanInterfaceAgent(BaseAgent):
     def __init__(self, llm: Any):
         super().__init__(AgentType.HUMAN_INTERFACE, llm)
 
-    def _initialize_capabilities(self) -> List[AgentCapability]:
+    def _initialize_capabilities(self) -> list[AgentCapability]:
         return [
             AgentCapability(
                 name="Natural Communication",
@@ -50,14 +51,14 @@ class HumanInterfaceAgent(BaseAgent):
                 (
                     "system",
                     """Du bist ein Human Interface Agent, spezialisiert auf Mensch-KI-Interaktion.
-                    
+
                     Fähigkeiten:
                     - Natürliche, empathische Kommunikation
                     - Feedback-Sammlung und -Verarbeitung
                     - Verständliche Erklärungen komplexer Themen
                     - Konfliktlösung und Mediation
                     - User Experience Optimierung
-                    
+
                     Kommuniziere klar, empathisch und zielgruppengerecht.
                     """,
                 ),

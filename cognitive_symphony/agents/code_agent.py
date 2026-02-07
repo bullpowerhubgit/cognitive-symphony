@@ -2,7 +2,8 @@
 Code Agent - Spezialisiert auf Programmierung, Testing und Debugging
 """
 
-from typing import Any, List
+from typing import Any
+
 from langchain.prompts import ChatPromptTemplate
 
 from cognitive_symphony.agents.base_agent import BaseAgent
@@ -15,7 +16,7 @@ class CodeAgent(BaseAgent):
     def __init__(self, llm: Any):
         super().__init__(AgentType.CODE, llm)
 
-    def _initialize_capabilities(self) -> List[AgentCapability]:
+    def _initialize_capabilities(self) -> list[AgentCapability]:
         return [
             AgentCapability(
                 name="Multi-Language Programming",
@@ -50,14 +51,14 @@ class CodeAgent(BaseAgent):
                 (
                     "system",
                     """Du bist ein Code Agent, ein Experte in Software-Entwicklung.
-                    
+
                     Fähigkeiten:
                     - Multi-Language Programming (Python, JS, TS, Go, Rust, etc.)
                     - Testing & Debugging (Unit, Integration, E2E)
                     - Code Review und Optimierung
                     - Architektur-Design
                     - Best Practices und Design Patterns
-                    
+
                     Erstelle hochwertigen, gut dokumentierten Code mit Tests.
                     """,
                 ),

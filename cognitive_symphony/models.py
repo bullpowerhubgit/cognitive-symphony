@@ -3,13 +3,14 @@ Gemeinsame Datenmodelle für Cognitive Symphony
 """
 
 from datetime import datetime
-from enum import Enum
-from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field
+from enum import StrEnum
+from typing import Any, Literal
 from uuid import uuid4
 
+from pydantic import BaseModel, Field
 
-class AgentType(str, Enum):
+
+class AgentType(StrEnum):
     """Typen der spezialisierten Agenten"""
 
     RESEARCH = "research"
@@ -22,7 +23,7 @@ class AgentType(str, Enum):
     CUSTOM = "custom"
 
 
-class TaskStatus(str, Enum):
+class TaskStatus(StrEnum):
     """Status einer Aufgabe"""
 
     PENDING = "pending"
@@ -32,7 +33,7 @@ class TaskStatus(str, Enum):
     CANCELLED = "cancelled"
 
 
-class TaskPriority(str, Enum):
+class TaskPriority(StrEnum):
     """Priorität einer Aufgabe"""
 
     LOW = "low"
@@ -48,16 +49,16 @@ class Task(BaseModel):
     description: str
     priority: TaskPriority = TaskPriority.MEDIUM
     status: TaskStatus = TaskStatus.PENDING
-    assigned_agent: Optional[AgentType] = None
-    parent_task_id: Optional[str] = None
-    subtasks: List[str] = Field(default_factory=list)
-    context: Dict[str, Any] = Field(default_factory=dict)
-    result: Optional[Any] = None
-    error: Optional[str] = None
+    assigned_agent: AgentType | None = None
+    parent_task_id: str | None = None
+    subtasks: list[str] = Field(default_factory=list)
+    context: dict[str, Any] = Field(default_factory=dict)
+    result: Any | None = None
+    error: str | None = None
     created_at: datetime = Field(default_factory=datetime.now)
-    started_at: Optional[datetime] = None
-    completed_at: Optional[datetime] = None
-    metadata: Dict[str, Any] = Field(default_factory=dict)
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class AgentCapability(BaseModel):
@@ -80,7 +81,7 @@ class AgentPerformance(BaseModel):
     avg_success_rate: float = 0.0
     avg_execution_time: float = 0.0
     last_active: datetime = Field(default_factory=datetime.now)
-    capabilities: List[AgentCapability] = Field(default_factory=list)
+    capabilities: list[AgentCapability] = Field(default_factory=list)
 
 
 class MemoryEntry(BaseModel):
@@ -89,13 +90,13 @@ class MemoryEntry(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid4()))
     type: Literal["episodic", "semantic", "procedural"]
     content: Any
-    embedding: Optional[List[float]] = None
+    embedding: list[float] | None = None
     timestamp: datetime = Field(default_factory=datetime.now)
     importance: float = Field(ge=0.0, le=1.0, default=0.5)
     access_count: int = 0
     last_accessed: datetime = Field(default_factory=datetime.now)
-    tags: List[str] = Field(default_factory=list)
-    metadata: Dict[str, Any] = Field(default_factory=dict)
+    tags: list[str] = Field(default_factory=list)
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class OrchestrationDecision(BaseModel):
@@ -103,13 +104,13 @@ class OrchestrationDecision(BaseModel):
 
     decision_id: str = Field(default_factory=lambda: str(uuid4()))
     task_id: str
-    selected_agents: List[AgentType]
+    selected_agents: list[AgentType]
     reasoning: str
     confidence: float = Field(ge=0.0, le=1.0)
-    alternative_strategies: List[Dict[str, Any]] = Field(default_factory=list)
+    alternative_strategies: list[dict[str, Any]] = Field(default_factory=list)
     timestamp: datetime = Field(default_factory=datetime.now)
-    outcome: Optional[str] = None  # success, failure, partial
-    learning_feedback: Optional[str] = None
+    outcome: str | None = None  # success, failure, partial
+    learning_feedback: str | None = None
 
 
 class OptimizationResult(BaseModel):
@@ -122,7 +123,7 @@ class OptimizationResult(BaseModel):
     improvement: float
     timestamp: datetime = Field(default_factory=datetime.now)
     applied: bool = False
-    metadata: Dict[str, Any] = Field(default_factory=dict)
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class SymphonyResult(BaseModel):
@@ -131,9 +132,9 @@ class SymphonyResult(BaseModel):
     task_id: str
     solution: Any
     status: TaskStatus
-    agent_interactions: List[Dict[str, Any]] = Field(default_factory=list)
-    orchestration_decisions: List[OrchestrationDecision] = Field(default_factory=list)
-    learning_insights: Dict[str, Any] = Field(default_factory=dict)
-    performance_metrics: Dict[str, float] = Field(default_factory=dict)
+    agent_interactions: list[dict[str, Any]] = Field(default_factory=list)
+    orchestration_decisions: list[OrchestrationDecision] = Field(default_factory=list)
+    learning_insights: dict[str, Any] = Field(default_factory=dict)
+    performance_metrics: dict[str, float] = Field(default_factory=dict)
     execution_time: float = 0.0
     timestamp: datetime = Field(default_factory=datetime.now)

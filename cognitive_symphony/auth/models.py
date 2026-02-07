@@ -3,13 +3,13 @@ Benutzer- und Authentifizierungsmodelle
 """
 
 from datetime import datetime
-from enum import Enum
-from typing import Optional
-from pydantic import BaseModel, Field, EmailStr
+from enum import StrEnum
 from uuid import uuid4
 
+from pydantic import BaseModel, Field
 
-class UserRole(str, Enum):
+
+class UserRole(StrEnum):
     """Benutzerrollen im System"""
 
     ADMIN = "admin"
@@ -22,7 +22,7 @@ class UserBase(BaseModel):
 
     username: str = Field(..., min_length=3, max_length=50)
     email: str = Field(..., min_length=5, max_length=255)
-    full_name: Optional[str] = None
+    full_name: str | None = None
     role: UserRole = UserRole.USER
 
 
@@ -45,7 +45,7 @@ class User(UserBase):
     id: str = Field(default_factory=lambda: str(uuid4()))
     is_active: bool = True
     created_at: datetime = Field(default_factory=datetime.now)
-    last_login: Optional[datetime] = None
+    last_login: datetime | None = None
 
 
 class UserInDB(User):
@@ -65,5 +65,5 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     """Dekodierte Token-Daten"""
 
-    username: Optional[str] = None
-    role: Optional[UserRole] = None
+    username: str | None = None
+    role: UserRole | None = None

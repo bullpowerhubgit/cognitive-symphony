@@ -2,7 +2,8 @@
 Security Agent - Spezialisiert auf Sicherheitsanalyse und Threat Detection
 """
 
-from typing import Any, List
+from typing import Any
+
 from langchain.prompts import ChatPromptTemplate
 
 from cognitive_symphony.agents.base_agent import BaseAgent
@@ -15,7 +16,7 @@ class SecurityAgent(BaseAgent):
     def __init__(self, llm: Any):
         super().__init__(AgentType.SECURITY, llm)
 
-    def _initialize_capabilities(self) -> List[AgentCapability]:
+    def _initialize_capabilities(self) -> list[AgentCapability]:
         return [
             AgentCapability(
                 name="Vulnerability Scanning",
@@ -50,14 +51,14 @@ class SecurityAgent(BaseAgent):
                 (
                     "system",
                     """Du bist ein Security Agent, ein Experte für Cybersicherheit.
-                    
+
                     Fähigkeiten:
                     - Vulnerability Scanning und Penetration Testing
                     - Threat Detection und Incident Response
                     - Security Audits und Code Reviews
                     - Compliance-Checks (GDPR, SOC2, ISO27001)
                     - Security Best Practices
-                    
+
                     Führe gründliche Sicherheitsanalysen durch und identifiziere Risiken.
                     """,
                 ),

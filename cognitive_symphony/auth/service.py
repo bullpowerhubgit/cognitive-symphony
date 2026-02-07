@@ -3,7 +3,6 @@ Authentifizierungs-Service mit JWT und Passwort-Hashing
 """
 
 from datetime import datetime, timedelta
-from typing import Dict, Optional
 
 import bcrypt
 import jwt
@@ -26,16 +25,14 @@ class AuthService:
     """Service für Authentifizierung und Benutzerverwaltung"""
 
     def __init__(self):
-        self._users_db: Dict[str, UserInDB] = {}
+        self._users_db: dict[str, UserInDB] = {}
         self._secret_key = settings.jwt_secret_key
         self._algorithm = settings.jwt_algorithm
         self._access_token_expire_minutes = settings.access_token_expire_minutes
 
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
         """Überprüft ein Passwort gegen den Hash"""
-        return bcrypt.checkpw(
-            plain_password.encode("utf-8"), hashed_password.encode("utf-8")
-        )
+        return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
 
     def hash_password(self, password: str) -> str:
         """Erstellt einen Passwort-Hash"""
@@ -45,7 +42,7 @@ class AuthService:
     def create_access_token(
         self,
         data: dict,
-        expires_delta: Optional[timedelta] = None,
+        expires_delta: timedelta | None = None,
     ) -> str:
         """Erstellt ein JWT-Access-Token"""
         to_encode = data.copy()
@@ -56,7 +53,7 @@ class AuthService:
         encoded_jwt = jwt.encode(to_encode, self._secret_key, algorithm=self._algorithm)
         return encoded_jwt
 
-    def decode_token(self, token: str) -> Optional[TokenData]:
+    def decode_token(self, token: str) -> TokenData | None:
         """Dekodiert und validiert ein JWT-Token"""
         try:
             payload = jwt.decode(token, self._secret_key, algorithms=[self._algorithm])
@@ -68,7 +65,7 @@ class AuthService:
         except (jwt.InvalidTokenError, Exception):
             return None
 
-    def register_user(self, user_data: UserCreate) -> Optional[User]:
+    def register_user(self, user_data: UserCreate) -> User | None:
         """Registriert einen neuen Benutzer"""
         if user_data.username in self._users_db:
             logger.warning("registration_failed_duplicate", username=user_data.username)
@@ -102,7 +99,7 @@ class AuthService:
             created_at=user_in_db.created_at,
         )
 
-    def authenticate_user(self, username: str, password: str) -> Optional[Token]:
+    def authenticate_user(self, username: str, password: str) -> Token | None:
         """Authentifiziert einen Benutzer und gibt ein Token zurück"""
         user = self._users_db.get(username)
         if not user:
@@ -131,7 +128,7 @@ class AuthService:
             expires_in=self._access_token_expire_minutes * 60,
         )
 
-    def get_user(self, username: str) -> Optional[User]:
+    def get_user(self, username: str) -> User | None:
         """Gibt einen Benutzer zurück (ohne Passwort)"""
         user_in_db = self._users_db.get(username)
         if user_in_db is None:

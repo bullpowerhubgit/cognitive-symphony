@@ -8,13 +8,12 @@ Der Meta-Orchestrator ist verantwortlich für:
 - Adaptive Team-Neubildung
 """
 
-import asyncio
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
+
 import structlog
-from langchain_openai import ChatOpenAI
-from langchain_anthropic import ChatAnthropic
 from langchain.prompts import ChatPromptTemplate
+from langchain_anthropic import ChatAnthropic
+from langchain_openai import ChatOpenAI
 
 from cognitive_symphony.config import settings
 from cognitive_symphony.models import (
@@ -22,7 +21,6 @@ from cognitive_symphony.models import (
     OrchestrationDecision,
     Task,
     TaskPriority,
-    TaskStatus,
 )
 
 logger = structlog.get_logger()
@@ -49,8 +47,8 @@ class MetaOrchestrator:
         self.llm_provider = llm_provider
         self.enable_learning = enable_learning
         self.llm = self._initialize_llm()
-        self.decision_history: List[OrchestrationDecision] = []
-        self.strategy_performance: Dict[str, float] = {}
+        self.decision_history: list[OrchestrationDecision] = []
+        self.strategy_performance: dict[str, float] = {}
 
         logger.info(
             "meta_orchestrator_initialized",
@@ -75,7 +73,7 @@ class MetaOrchestrator:
         else:
             raise ValueError(f"Unsupported LLM provider: {self.llm_provider}")
 
-    async def decompose_task(self, task: Task) -> List[Task]:
+    async def decompose_task(self, task: Task) -> list[Task]:
         """
         Zerlegt eine komplexe Aufgabe in Teilaufgaben
 
@@ -92,10 +90,10 @@ class MetaOrchestrator:
             [
                 (
                     "system",
-                    """Du bist ein Meta-Orchestrator, der komplexe Aufgaben intelligent in 
-                    Teilaufgaben zerlegt. Analysiere die Aufgabe und erstelle eine optimale 
+                    """Du bist ein Meta-Orchestrator, der komplexe Aufgaben intelligent in
+                    Teilaufgaben zerlegt. Analysiere die Aufgabe und erstelle eine optimale
                     Zerlegung in logische, ausführbare Schritte.
-                    
+
                     Verfügbare Agent-Typen:
                     - RESEARCH: Web-Recherche, Informationssammlung
                     - CODE: Programmierung, Testing, Debugging
@@ -104,7 +102,7 @@ class MetaOrchestrator:
                     - SECURITY: Sicherheitsprüfung, Threat-Detection
                     - OPTIMIZATION: Performance-Optimierung, Kostenreduktion
                     - HUMAN_INTERFACE: Kommunikation mit Menschen
-                    
+
                     Erstelle eine strukturierte Zerlegung mit:
                     1. Beschreibung der Teilaufgabe
                     2. Empfohlener Agent-Typ
@@ -138,9 +136,7 @@ class MetaOrchestrator:
 
         return subtasks
 
-    def _parse_subtasks_from_response(
-        self, response: str, parent_task_id: str
-    ) -> List[Task]:
+    def _parse_subtasks_from_response(self, response: str, parent_task_id: str) -> list[Task]:
         """
         Parst die LLM-Antwort und erstellt Task-Objekte
 
@@ -159,10 +155,7 @@ class MetaOrchestrator:
                 continue
 
             # Erkennen von Task-Beschreibungen (vereinfacht)
-            if any(
-                keyword in line.lower()
-                for keyword in ["aufgabe", "schritt", "task", "step"]
-            ):
+            if any(keyword in line.lower() for keyword in ["aufgabe", "schritt", "task", "step"]):
                 if current_subtask:
                     subtasks.append(current_subtask)
 
@@ -197,8 +190,8 @@ class MetaOrchestrator:
     async def select_optimal_agents(
         self,
         task: Task,
-        agent_performance_history: Dict[AgentType, Dict[str, float]],
-    ) -> Tuple[List[AgentType], OrchestrationDecision]:
+        agent_performance_history: dict[AgentType, dict[str, float]],
+    ) -> tuple[list[AgentType], OrchestrationDecision]:
         """
         Wählt die optimalen Agenten für eine Aufgabe basierend auf:
         - Task-Anforderungen
@@ -229,17 +222,17 @@ class MetaOrchestrator:
             [
                 (
                     "system",
-                    """Du bist ein Meta-Orchestrator mit Metakognition. Analysiere die Aufgabe 
+                    """Du bist ein Meta-Orchestrator mit Metakognition. Analysiere die Aufgabe
                     und wähle die optimalen Agenten aus. Berücksichtige:
-                    
+
                     1. Task-Anforderungen
                     2. Agent-Performance-Historie
                     3. Potenzielle Synergien zwischen Agenten
                     4. Ressourcen-Effizienz
-                    
+
                     Verfügbare Agenten: {available_agents}
                     Performance-Historie: {performance_history}
-                    
+
                     Antworte mit:
                     - Liste der ausgewählten Agenten
                     - Begründung für jede Auswahl
@@ -266,9 +259,7 @@ class MetaOrchestrator:
         )
 
         # Parse Response
-        selected_agents, reasoning, confidence = self._parse_agent_selection(
-            response.content
-        )
+        selected_agents, reasoning, confidence = self._parse_agent_selection(response.content)
 
         decision = OrchestrationDecision(
             task_id=task.id,
@@ -288,9 +279,7 @@ class MetaOrchestrator:
 
         return selected_agents, decision
 
-    def _parse_agent_selection(
-        self, response: str
-    ) -> Tuple[List[AgentType], str, float]:
+    def _parse_agent_selection(self, response: str) -> tuple[list[AgentType], str, float]:
         """Parst die Agent-Auswahl aus der LLM-Antwort"""
         selected_agents = []
         reasoning = response
@@ -373,10 +362,10 @@ class MetaOrchestrator:
             [
                 (
                     "system",
-                    """Du bist ein Meta-Orchestrator mit Metakognition. Analysiere deine 
-                    letzten Entscheidungen und identifiziere Muster, Verbesserungsmöglichkeiten 
+                    """Du bist ein Meta-Orchestrator mit Metakognition. Analysiere deine
+                    letzten Entscheidungen und identifiziere Muster, Verbesserungsmöglichkeiten
                     und neue Strategien.
-                    
+
                     Fragen zur Reflexion:
                     1. Welche Agenten-Kombinationen waren am erfolgreichsten?
                     2. Welche Fehler wurden wiederholt gemacht?
@@ -403,12 +392,10 @@ class MetaOrchestrator:
 
         # In Produktion würden die Insights gespeichert und angewendet
 
-    def get_performance_metrics(self) -> Dict[str, Any]:
+    def get_performance_metrics(self) -> dict[str, Any]:
         """Gibt Performance-Metriken des Orchestrators zurück"""
         total_decisions = len(self.decision_history)
-        successful_decisions = sum(
-            1 for d in self.decision_history if d.outcome == "success"
-        )
+        successful_decisions = sum(1 for d in self.decision_history if d.outcome == "success")
 
         return {
             "total_decisions": total_decisions,

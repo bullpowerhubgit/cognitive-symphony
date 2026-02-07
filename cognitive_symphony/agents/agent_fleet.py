@@ -2,20 +2,21 @@
 Agent Fleet - Verwaltet alle spezialisierten Agenten
 """
 
-from typing import Any, Dict, List
-import structlog
-from langchain_openai import ChatOpenAI
-from langchain_anthropic import ChatAnthropic
+from typing import Any
 
+import structlog
+from langchain_anthropic import ChatAnthropic
+from langchain_openai import ChatOpenAI
+
+from cognitive_symphony.agents.analysis_agent import AnalysisAgent
+from cognitive_symphony.agents.code_agent import CodeAgent
+from cognitive_symphony.agents.creative_agent import CreativeAgent
+from cognitive_symphony.agents.human_interface_agent import HumanInterfaceAgent
+from cognitive_symphony.agents.optimization_agent import OptimizationAgent
+from cognitive_symphony.agents.research_agent import ResearchAgent
+from cognitive_symphony.agents.security_agent import SecurityAgent
 from cognitive_symphony.config import settings
 from cognitive_symphony.models import AgentType, Task
-from cognitive_symphony.agents.research_agent import ResearchAgent
-from cognitive_symphony.agents.code_agent import CodeAgent
-from cognitive_symphony.agents.analysis_agent import AnalysisAgent
-from cognitive_symphony.agents.creative_agent import CreativeAgent
-from cognitive_symphony.agents.security_agent import SecurityAgent
-from cognitive_symphony.agents.optimization_agent import OptimizationAgent
-from cognitive_symphony.agents.human_interface_agent import HumanInterfaceAgent
 
 logger = structlog.get_logger()
 
@@ -32,7 +33,7 @@ class AgentFleet:
         """
         self.llm_provider = llm_provider
         self.llm = self._initialize_llm()
-        self.agents: Dict[AgentType, Any] = self._initialize_agents()
+        self.agents: dict[AgentType, Any] = self._initialize_agents()
 
         logger.info(
             "agent_fleet_initialized",
@@ -57,7 +58,7 @@ class AgentFleet:
         else:
             raise ValueError(f"Unsupported LLM provider: {self.llm_provider}")
 
-    def _initialize_agents(self) -> Dict[AgentType, Any]:
+    def _initialize_agents(self) -> dict[AgentType, Any]:
         """Initialisiert alle spezialisierten Agenten"""
         return {
             AgentType.RESEARCH: ResearchAgent(self.llm),
@@ -69,9 +70,7 @@ class AgentFleet:
             AgentType.HUMAN_INTERFACE: HumanInterfaceAgent(self.llm),
         }
 
-    async def execute_task(
-        self, task: Task, selected_agents: List[AgentType]
-    ) -> Any:
+    async def execute_task(self, task: Task, selected_agents: list[AgentType]) -> Any:
         """
         Führt eine Aufgabe mit den ausgewählten Agenten aus
 
@@ -133,7 +132,7 @@ class AgentFleet:
         """Gibt einen spezifischen Agenten zurück"""
         return self.agents.get(agent_type)
 
-    def get_performance_metrics(self) -> Dict[str, Any]:
+    def get_performance_metrics(self) -> dict[str, Any]:
         """Gibt Performance-Metriken aller Agenten zurück"""
         metrics = {}
         for agent_type, agent in self.agents.items():
@@ -141,7 +140,7 @@ class AgentFleet:
 
         return metrics
 
-    def get_agent_capabilities(self) -> Dict[str, List[Dict]]:
+    def get_agent_capabilities(self) -> dict[str, list[dict]]:
         """Gibt alle Fähigkeiten aller Agenten zurück"""
         capabilities = {}
         for agent_type, agent in self.agents.items():

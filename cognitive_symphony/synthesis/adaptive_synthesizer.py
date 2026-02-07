@@ -7,7 +7,8 @@ Erstellt neue spezialisierte Agenten durch:
 - Lernen aus erfolgreichen Patterns
 """
 
-from typing import Any, Dict, List
+from typing import Any
+
 import structlog
 from langchain.prompts import ChatPromptTemplate
 
@@ -25,8 +26,8 @@ class SynthesizedAgent(BaseAgent):
         llm: Any,
         name: str,
         description: str,
-        capabilities: List[AgentCapability],
-        base_agents: List[AgentType],
+        capabilities: list[AgentCapability],
+        base_agents: list[AgentType],
     ):
         """
         Initialisiert einen synthetisierten Agenten
@@ -52,7 +53,7 @@ class SynthesizedAgent(BaseAgent):
             base_agents=[a.value for a in base_agents],
         )
 
-    def _initialize_capabilities(self) -> List[AgentCapability]:
+    def _initialize_capabilities(self) -> list[AgentCapability]:
         """Capabilities werden im Constructor gesetzt"""
         return []
 
@@ -63,15 +64,15 @@ class SynthesizedAgent(BaseAgent):
                 (
                     "system",
                     """Du bist ein spezialisierter Agent mit folgenden Eigenschaften:
-                    
+
                     Name: {agent_name}
                     Beschreibung: {description}
-                    
+
                     Du kombinierst die Fähigkeiten von: {base_agents}
-                    
+
                     Deine Capabilities:
                     {capabilities}
-                    
+
                     Nutze diese kombinierten Fähigkeiten optimal für die Aufgabe.
                     """,
                 ),
@@ -126,12 +127,12 @@ class AdaptiveAgentSynthesizer:
         """
         self.llm = llm
         self.agent_fleet = agent_fleet
-        self.synthesized_agents: Dict[str, SynthesizedAgent] = {}
+        self.synthesized_agents: dict[str, SynthesizedAgent] = {}
 
         logger.info("adaptive_synthesizer_initialized")
 
     async def synthesize_agent(
-        self, task: Task, required_capabilities: List[str]
+        self, task: Task, required_capabilities: list[str]
     ) -> SynthesizedAgent:
         """
         Synthetisiert einen neuen Agenten basierend auf Task-Anforderungen
@@ -180,9 +181,7 @@ class AdaptiveAgentSynthesizer:
 
         return synthesized_agent
 
-    async def _find_suitable_base_agents(
-        self, required_capabilities: List[str]
-    ) -> List[AgentType]:
+    async def _find_suitable_base_agents(self, required_capabilities: list[str]) -> list[AgentType]:
         """
         Findet Basis-Agenten, die die benötigten Capabilities haben
 
@@ -220,9 +219,9 @@ class AdaptiveAgentSynthesizer:
     async def _generate_agent_specification(
         self,
         task: Task,
-        required_capabilities: List[str],
-        base_agents: List[AgentType],
-    ) -> Dict[str, str]:
+        required_capabilities: list[str],
+        base_agents: list[AgentType],
+    ) -> dict[str, str]:
         """
         Generiert Name und Beschreibung für den neuen Agenten
 
@@ -239,17 +238,17 @@ class AdaptiveAgentSynthesizer:
                 (
                     "system",
                     """Du bist ein KI-Architekt, der neue spezialisierte Agenten entwirft.
-                    
+
                     Erstelle einen Namen und eine Beschreibung für einen neuen Agenten, der:
                     - Die folgenden Capabilities benötigt: {capabilities}
                     - Auf diesen Basis-Agenten aufbaut: {base_agents}
                     - Diese Aufgabe erfüllen soll: {task}
-                    
+
                     Der Name sollte:
                     - Prägnant und beschreibend sein
                     - Die Hauptfunktion widerspiegeln
                     - Im Format "XyzAgent" sein
-                    
+
                     Die Beschreibung sollte:
                     - Klar die Fähigkeiten beschreiben
                     - Die Synergie der Basis-Agenten hervorheben
@@ -288,9 +287,7 @@ class AdaptiveAgentSynthesizer:
 
         return {"name": name, "description": description}
 
-    def _combine_capabilities(
-        self, base_agents: List[AgentType]
-    ) -> List[AgentCapability]:
+    def _combine_capabilities(self, base_agents: list[AgentType]) -> list[AgentCapability]:
         """
         Kombiniert Capabilities mehrerer Basis-Agenten
 
@@ -333,7 +330,7 @@ class AdaptiveAgentSynthesizer:
         # Synthesize Agent
         return await self.synthesize_agent(task, required_capabilities)
 
-    async def _extract_required_capabilities(self, task: Task) -> List[str]:
+    async def _extract_required_capabilities(self, task: Task) -> list[str]:
         """
         Extrahiert benötigte Capabilities aus einer Task-Beschreibung
 
@@ -347,9 +344,9 @@ class AdaptiveAgentSynthesizer:
             [
                 (
                     "system",
-                    """Analysiere die folgende Aufgabe und identifiziere die benötigten 
+                    """Analysiere die folgende Aufgabe und identifiziere die benötigten
                     Fähigkeiten (Capabilities).
-                    
+
                     Liste nur die Kernfähigkeiten auf, z.B.:
                     - Research
                     - Data Analysis
@@ -357,7 +354,7 @@ class AdaptiveAgentSynthesizer:
                     - Security Analysis
                     - Content Creation
                     - Optimization
-                    
+
                     Antworte mit einer kommagetrennten Liste.
                     """,
                 ),
@@ -374,12 +371,10 @@ class AdaptiveAgentSynthesizer:
         )
 
         # Parse capabilities
-        capabilities = [
-            cap.strip() for cap in response.content.split(",") if cap.strip()
-        ]
+        capabilities = [cap.strip() for cap in response.content.split(",") if cap.strip()]
 
         return capabilities[:5]  # Max 5 Capabilities
 
-    def get_synthesized_agents(self) -> Dict[str, SynthesizedAgent]:
+    def get_synthesized_agents(self) -> dict[str, SynthesizedAgent]:
         """Gibt alle synthetisierten Agenten zurück"""
         return self.synthesized_agents

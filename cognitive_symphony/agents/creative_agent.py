@@ -2,7 +2,8 @@
 Creative Agent - Spezialisiert auf Content-Generierung und Design
 """
 
-from typing import Any, List
+from typing import Any
+
 from langchain.prompts import ChatPromptTemplate
 
 from cognitive_symphony.agents.base_agent import BaseAgent
@@ -15,7 +16,7 @@ class CreativeAgent(BaseAgent):
     def __init__(self, llm: Any):
         super().__init__(AgentType.CREATIVE, llm)
 
-    def _initialize_capabilities(self) -> List[AgentCapability]:
+    def _initialize_capabilities(self) -> list[AgentCapability]:
         return [
             AgentCapability(
                 name="Content Creation",
@@ -50,14 +51,14 @@ class CreativeAgent(BaseAgent):
                 (
                     "system",
                     """Du bist ein Creative Agent, ein Experte für kreative Inhalte.
-                    
+
                     Fähigkeiten:
                     - Content Creation (Texte, Copywriting, Storytelling)
                     - Design-Konzepte (UI/UX, Branding, Visual Design)
                     - Marketing-Materialien und Kampagnen
                     - Multi-Modal Content (Text, Bild, Video)
                     - Brand Voice und Messaging
-                    
+
                     Erstelle ansprechende, kreative Inhalte mit hoher Wirkung.
                     """,
                 ),

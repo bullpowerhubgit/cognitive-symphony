@@ -7,16 +7,17 @@ Self-Optimizer - Selbstoptimierungs-Engine
 """
 
 import random
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
-import structlog
 from collections import defaultdict
+from datetime import datetime
+from typing import Any
+
+import structlog
 
 from cognitive_symphony.models import (
-    OrchestrationDecision,
-    OptimizationResult,
-    Task,
     AgentType,
+    OptimizationResult,
+    OrchestrationDecision,
+    Task,
 )
 
 logger = structlog.get_logger()
@@ -45,21 +46,21 @@ class SelfOptimizer:
         self.enable_rl = enable_rl
 
         # A/B Testing
-        self.ab_experiments: Dict[str, Dict[str, Any]] = {}
-        self.strategy_variants: Dict[str, List[List[AgentType]]] = defaultdict(list)
+        self.ab_experiments: dict[str, dict[str, Any]] = {}
+        self.strategy_variants: dict[str, list[list[AgentType]]] = defaultdict(list)
 
         # Reinforcement Learning
-        self.q_table: Dict[Tuple, float] = {}  # State-Action Values
+        self.q_table: dict[tuple, float] = {}  # State-Action Values
         self.learning_rate = 0.1
         self.discount_factor = 0.9
         self.epsilon = 0.2  # Exploration rate
 
         # Evolutionäre Algorithmen
-        self.strategy_population: List[Dict[str, Any]] = []
+        self.strategy_population: list[dict[str, Any]] = []
         self.generation = 0
 
         # Performance Tracking
-        self.optimization_history: List[OptimizationResult] = []
+        self.optimization_history: list[OptimizationResult] = []
 
         logger.info(
             "self_optimizer_initialized",
@@ -70,9 +71,9 @@ class SelfOptimizer:
     async def optimize(
         self,
         task: Task,
-        subtasks: List[Task],
-        decisions: List[OrchestrationDecision],
-    ) -> Optional[OptimizationResult]:
+        subtasks: list[Task],
+        decisions: list[OrchestrationDecision],
+    ) -> OptimizationResult | None:
         """
         Optimiert das System basierend auf der aktuellen Task-Ausführung
 
@@ -106,9 +107,7 @@ class SelfOptimizer:
 
         return None
 
-    async def _run_ab_test(
-        self, task: Task, decisions: List[OrchestrationDecision]
-    ) -> None:
+    async def _run_ab_test(self, task: Task, decisions: list[OrchestrationDecision]) -> None:
         """
         Führt A/B Testing für verschiedene Strategien durch
 
@@ -134,9 +133,7 @@ class SelfOptimizer:
         experiment = self.ab_experiments[task_type]
         if len(experiment["control_group"]) == 0:
             # Erste Strategie wird Control
-            experiment["control_group"].append(
-                {"strategy": strategy, "performance": performance}
-            )
+            experiment["control_group"].append({"strategy": strategy, "performance": performance})
         else:
             # Variante
             experiment["variant_groups"][strategy].append(performance)
@@ -149,19 +146,16 @@ class SelfOptimizer:
         )
 
         # Analysiere Ergebnisse wenn genug Daten
-        if (
-            len(experiment["control_group"]) > 5
-            and len(experiment["variant_groups"]) > 0
-        ):
+        if len(experiment["control_group"]) > 5 and len(experiment["variant_groups"]) > 0:
             await self._analyze_ab_results(task_type)
 
     async def _analyze_ab_results(self, task_type: str) -> None:
         """Analysiert A/B Test Ergebnisse und identifiziert bessere Strategien"""
         experiment = self.ab_experiments[task_type]
 
-        control_performance = sum(
-            r["performance"] for r in experiment["control_group"]
-        ) / len(experiment["control_group"])
+        control_performance = sum(r["performance"] for r in experiment["control_group"]) / len(
+            experiment["control_group"]
+        )
 
         logger.info(
             "ab_test_analysis",
@@ -184,9 +178,7 @@ class SelfOptimizer:
 
                     # Würde in Produktion die bessere Strategie als Standard setzen
 
-    async def _update_q_values(
-        self, task: Task, decisions: List[OrchestrationDecision]
-    ) -> None:
+    async def _update_q_values(self, task: Task, decisions: list[OrchestrationDecision]) -> None:
         """
         Update Q-Values für Reinforcement Learning
 
@@ -210,10 +202,7 @@ class SelfOptimizer:
 
             # Max Q-Value für next state
             max_next_q = max(
-                [
-                    self.q_table.get((next_state, a), 0.0)
-                    for a in self._get_possible_actions()
-                ],
+                [self.q_table.get((next_state, a), 0.0) for a in self._get_possible_actions()],
                 default=0.0,
             )
 
@@ -232,7 +221,7 @@ class SelfOptimizer:
                 new_q=new_q,
             )
 
-    def get_optimal_action(self, task: Task) -> List[AgentType]:
+    def get_optimal_action(self, task: Task) -> list[AgentType]:
         """
         Gibt die optimale Aktion für einen Task basierend auf gelernten Q-Values zurück
 
@@ -258,8 +247,8 @@ class SelfOptimizer:
             return [AgentType(agent) for agent in best_action]
 
     async def _evolve_strategies(
-        self, decisions: List[OrchestrationDecision]
-    ) -> Optional[OptimizationResult]:
+        self, decisions: list[OrchestrationDecision]
+    ) -> OptimizationResult | None:
         """
         Evolutionäre Algorithmen für Strategieverbesserung
 
@@ -320,8 +309,7 @@ class SelfOptimizer:
             strategy_name=f"evolved_gen_{self.generation}",
             performance_before=self.strategy_population[-1]["fitness"],
             performance_after=best_strategy["fitness"],
-            improvement=best_strategy["fitness"]
-            - self.strategy_population[-1]["fitness"],
+            improvement=best_strategy["fitness"] - self.strategy_population[-1]["fitness"],
             metadata={
                 "generation": self.generation,
                 "population_size": len(self.strategy_population),
@@ -337,9 +325,7 @@ class SelfOptimizer:
 
         return result
 
-    async def _update_predictions(
-        self, task: Task, decisions: List[OrchestrationDecision]
-    ) -> None:
+    async def _update_predictions(self, task: Task, decisions: list[OrchestrationDecision]) -> None:
         """
         Update Predictive Analytics Modelle
 
@@ -356,9 +342,7 @@ class SelfOptimizer:
             return "coding"
         elif any(keyword in description for keyword in ["research", "analyze", "find"]):
             return "research"
-        elif any(
-            keyword in description for keyword in ["create", "design", "write"]
-        ):
+        elif any(keyword in description for keyword in ["create", "design", "write"]):
             return "creative"
         else:
             return "general"
@@ -368,7 +352,7 @@ class SelfOptimizer:
         # Vereinfachtes State-Encoding
         return f"{self._classify_task_type(task)}_{task.priority.value}"
 
-    def _get_possible_actions(self) -> List[Tuple[str, ...]]:
+    def _get_possible_actions(self) -> list[tuple[str, ...]]:
         """Gibt mögliche Aktionen (Agenten-Kombinationen) zurück"""
         # Vereinfacht - in Produktion würden alle sinnvollen Kombinationen generiert
         return [
@@ -379,21 +363,17 @@ class SelfOptimizer:
             (AgentType.CODE.value, AgentType.SECURITY.value),
         ]
 
-    def _calculate_performance(
-        self, task: Task, decisions: List[OrchestrationDecision]
-    ) -> float:
+    def _calculate_performance(self, task: Task, decisions: list[OrchestrationDecision]) -> float:
         """Berechnet Performance-Score für eine Task-Ausführung"""
         # Faktoren: Success, Confidence, Speed
         success_factor = 1.0 if task.status.value == "completed" else 0.3
 
-        avg_confidence = (
-            sum(d.confidence for d in decisions) / len(decisions) if decisions else 0.5
-        )
+        avg_confidence = sum(d.confidence for d in decisions) / len(decisions) if decisions else 0.5
 
         # Vereinfacht - würde auch Execution Time berücksichtigen
         return success_factor * avg_confidence
 
-    def get_metrics(self) -> Dict[str, Any]:
+    def get_metrics(self) -> dict[str, Any]:
         """Gibt Optimizer-Metriken zurück"""
         return {
             "ab_experiments": len(self.ab_experiments),

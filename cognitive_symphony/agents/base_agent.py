@@ -4,7 +4,8 @@ Base Agent - Basisklasse für alle spezialisierten Agenten
 
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 import structlog
 
 from cognitive_symphony.models import AgentCapability, AgentPerformance, AgentType, Task
@@ -33,7 +34,7 @@ class BaseAgent(ABC):
         self.capabilities = self._initialize_capabilities()
 
     @abstractmethod
-    def _initialize_capabilities(self) -> List[AgentCapability]:
+    def _initialize_capabilities(self) -> list[AgentCapability]:
         """Definiert die Fähigkeiten des Agenten"""
         pass
 
@@ -71,17 +72,13 @@ class BaseAgent(ABC):
             self.performance.last_active = datetime.now()
 
             # Update durchschnittliche Execution Time
-            total_tasks = (
-                self.performance.tasks_completed + self.performance.tasks_failed
-            )
+            total_tasks = self.performance.tasks_completed + self.performance.tasks_failed
             self.performance.avg_execution_time = (
                 self.performance.avg_execution_time * (total_tasks - 1) + execution_time
             ) / total_tasks
 
             # Update Success Rate
-            self.performance.avg_success_rate = (
-                self.performance.tasks_completed / total_tasks
-            )
+            self.performance.avg_success_rate = self.performance.tasks_completed / total_tasks
 
             logger.info(
                 "agent_task_completed",
@@ -104,7 +101,7 @@ class BaseAgent(ABC):
 
             raise
 
-    def get_performance_metrics(self) -> Dict[str, Any]:
+    def get_performance_metrics(self) -> dict[str, Any]:
         """Gibt Performance-Metriken des Agenten zurück"""
         return {
             "agent_id": self.agent_id,
@@ -116,7 +113,7 @@ class BaseAgent(ABC):
             "capabilities": [c.dict() for c in self.capabilities],
         }
 
-    def share_knowledge(self, knowledge: Dict[str, Any]) -> None:
+    def share_knowledge(self, knowledge: dict[str, Any]) -> None:
         """
         Teilt Wissen mit anderen Agenten (Kollaboratives Lernen)
 

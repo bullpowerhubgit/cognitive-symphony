@@ -2,7 +2,8 @@
 Research Agent - Spezialisiert auf Web-Recherche und Informationssammlung
 """
 
-from typing import Any, List
+from typing import Any
+
 from langchain.prompts import ChatPromptTemplate
 
 from cognitive_symphony.agents.base_agent import BaseAgent
@@ -15,7 +16,7 @@ class ResearchAgent(BaseAgent):
     def __init__(self, llm: Any):
         super().__init__(AgentType.RESEARCH, llm)
 
-    def _initialize_capabilities(self) -> List[AgentCapability]:
+    def _initialize_capabilities(self) -> list[AgentCapability]:
         return [
             AgentCapability(
                 name="Web Research",
@@ -43,10 +44,10 @@ class ResearchAgent(BaseAgent):
             [
                 (
                     "system",
-                    """Du bist ein Research Agent, spezialisiert auf gründliche Recherche 
-                    und Informationssammlung. Analysiere die Aufgabe und erstelle eine 
+                    """Du bist ein Research Agent, spezialisiert auf gründliche Recherche
+                    und Informationssammlung. Analysiere die Aufgabe und erstelle eine
                     umfassende Recherche.
-                    
+
                     Fähigkeiten:
                     - Web-Recherche und -Analyse
                     - Datenextraktion und -strukturierung

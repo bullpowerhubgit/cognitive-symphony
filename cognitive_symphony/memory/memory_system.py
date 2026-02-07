@@ -5,10 +5,11 @@ Memory System - Tri-Layer Gedächtnis-System
 - Prozedurales Gedächtnis: Workflows und Strategien
 """
 
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
-import structlog
 from collections import defaultdict
+from datetime import datetime, timedelta
+from typing import Any
+
+import structlog
 
 from cognitive_symphony.config import settings
 from cognitive_symphony.models import AgentType, MemoryEntry, OrchestrationDecision, Task
@@ -28,13 +29,13 @@ class MemorySystem:
     def __init__(self):
         """Initialisiert das Gedächtnis-System"""
         # In Produktion würden hier echte Datenbanken verwendet
-        self.episodic_memory: List[MemoryEntry] = []
-        self.semantic_memory: List[MemoryEntry] = []
-        self.procedural_memory: List[MemoryEntry] = []
+        self.episodic_memory: list[MemoryEntry] = []
+        self.semantic_memory: list[MemoryEntry] = []
+        self.procedural_memory: list[MemoryEntry] = []
 
         # Indizes für schnellen Zugriff
-        self.task_index: Dict[str, List[MemoryEntry]] = defaultdict(list)
-        self.agent_performance_index: Dict[AgentType, Dict[str, Any]] = defaultdict(
+        self.task_index: dict[str, list[MemoryEntry]] = defaultdict(list)
+        self.agent_performance_index: dict[AgentType, dict[str, Any]] = defaultdict(
             lambda: {
                 "total_tasks": 0,
                 "successful_tasks": 0,
@@ -48,8 +49,8 @@ class MemorySystem:
     def store_episode(
         self,
         task: Task,
-        subtasks: List[Task],
-        decisions: List[OrchestrationDecision],
+        subtasks: list[Task],
+        decisions: list[OrchestrationDecision],
     ) -> None:
         """
         Speichert eine Episode (Task-Ausführung) im episodischen Gedächtnis
@@ -100,7 +101,7 @@ class MemorySystem:
         self._cleanup_old_memories()
 
     def store_knowledge(
-        self, knowledge: Dict[str, Any], tags: List[str], importance: float = 0.5
+        self, knowledge: dict[str, Any], tags: list[str], importance: float = 0.5
     ) -> None:
         """
         Speichert Wissen im semantischen Gedächtnis
@@ -125,9 +126,7 @@ class MemorySystem:
             tags=tags,
         )
 
-    def store_workflow(
-        self, workflow: Dict[str, Any], performance: float, tags: List[str]
-    ) -> None:
+    def store_workflow(self, workflow: dict[str, Any], performance: float, tags: list[str]) -> None:
         """
         Speichert einen Workflow im prozeduralen Gedächtnis
 
@@ -152,9 +151,7 @@ class MemorySystem:
             performance=performance,
         )
 
-    def recall_episodes(
-        self, query: Optional[str] = None, limit: int = 10
-    ) -> List[MemoryEntry]:
+    def recall_episodes(self, query: str | None = None, limit: int = 10) -> list[MemoryEntry]:
         """
         Ruft relevante Episoden ab
 
@@ -183,7 +180,7 @@ class MemorySystem:
 
         return episodes[:limit]
 
-    def recall_knowledge(self, tags: Optional[List[str]] = None) -> List[MemoryEntry]:
+    def recall_knowledge(self, tags: list[str] | None = None) -> list[MemoryEntry]:
         """
         Ruft Wissen aus dem semantischen Gedächtnis ab
 
@@ -196,15 +193,11 @@ class MemorySystem:
         knowledge = self.semantic_memory
 
         if tags:
-            knowledge = [
-                k for k in knowledge if any(tag in k.tags for tag in tags)
-            ]
+            knowledge = [k for k in knowledge if any(tag in k.tags for tag in tags)]
 
         return sorted(knowledge, key=lambda k: k.importance, reverse=True)
 
-    def recall_workflows(
-        self, min_performance: float = 0.0, limit: int = 10
-    ) -> List[MemoryEntry]:
+    def recall_workflows(self, min_performance: float = 0.0, limit: int = 10) -> list[MemoryEntry]:
         """
         Ruft erfolgreiche Workflows ab
 
@@ -227,7 +220,7 @@ class MemorySystem:
             reverse=True,
         )[:limit]
 
-    def get_agent_performance_history(self) -> Dict[AgentType, Dict[str, float]]:
+    def get_agent_performance_history(self) -> dict[AgentType, dict[str, float]]:
         """
         Gibt Performance-Historie aller Agenten zurück
 
@@ -236,9 +229,7 @@ class MemorySystem:
         """
         return dict(self.agent_performance_index)
 
-    def _calculate_importance(
-        self, task: Task, decisions: List[OrchestrationDecision]
-    ) -> float:
+    def _calculate_importance(self, task: Task, decisions: list[OrchestrationDecision]) -> float:
         """
         Berechnet die Wichtigkeit einer Episode
 
@@ -261,11 +252,7 @@ class MemorySystem:
         complexity_factor = min(len(decisions) * 0.1, 0.3)
 
         # Durchschnittliche Confidence
-        avg_confidence = (
-            sum(d.confidence for d in decisions) / len(decisions)
-            if decisions
-            else 0.5
-        )
+        avg_confidence = sum(d.confidence for d in decisions) / len(decisions) if decisions else 0.5
 
         # Outcome-Bonus
         outcome_factor = 0.2 if task.status.value == "completed" else 0.0
@@ -282,21 +269,17 @@ class MemorySystem:
 
         # Episodisches Gedächtnis - behalte nur wichtige oder neue
         self.episodic_memory = [
-            e
-            for e in self.episodic_memory
-            if e.timestamp > cutoff_date or e.importance > 0.7
+            e for e in self.episodic_memory if e.timestamp > cutoff_date or e.importance > 0.7
         ]
 
         # Semantisches Gedächtnis - behalte häufig genutzte oder wichtige
         self.semantic_memory = [
-            s
-            for s in self.semantic_memory
-            if s.access_count > 5 or s.importance > 0.6
+            s for s in self.semantic_memory if s.access_count > 5 or s.importance > 0.6
         ]
 
         logger.info("memory_cleanup_completed")
 
-    def get_metrics(self) -> Dict[str, Any]:
+    def get_metrics(self) -> dict[str, Any]:
         """Gibt Memory-System-Metriken zurück"""
         return {
             "episodic_memory_size": len(self.episodic_memory),

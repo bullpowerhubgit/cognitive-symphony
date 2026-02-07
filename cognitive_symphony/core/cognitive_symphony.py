@@ -4,23 +4,21 @@ Cognitive Symphony - Haupt-Interface für das System
 Diese Klasse orchestriert alle Komponenten und bietet das User-Interface
 """
 
-import asyncio
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 import structlog
 
+from cognitive_symphony.agents.agent_fleet import AgentFleet
 from cognitive_symphony.config import settings
 from cognitive_symphony.core.meta_orchestrator import MetaOrchestrator
-from cognitive_symphony.agents.agent_fleet import AgentFleet
 from cognitive_symphony.memory.memory_system import MemorySystem
-from cognitive_symphony.optimization.self_optimizer import SelfOptimizer
 from cognitive_symphony.models import (
-    AgentType,
     SymphonyResult,
     Task,
-    TaskPriority,
     TaskStatus,
 )
+from cognitive_symphony.optimization.self_optimizer import SelfOptimizer
 
 logger = structlog.get_logger()
 
@@ -64,7 +62,7 @@ class CognitiveSymphony:
             enable_rl=settings.enable_reinforcement_learning,
         )
 
-        self.task_history: List[Task] = []
+        self.task_history: list[Task] = []
 
         logger.info(
             "cognitive_symphony_initialized",
@@ -77,7 +75,7 @@ class CognitiveSymphony:
         self,
         task: Any,
         optimization_level: str = "medium",
-        context: Optional[Dict[str, Any]] = None,
+        context: dict[str, Any] | None = None,
     ) -> SymphonyResult:
         """
         Löst eine komplexe Aufgabe durch intelligente Orchestrierung
@@ -123,10 +121,8 @@ class CognitiveSymphony:
             agent_performance = self.memory_system.get_agent_performance_history()
 
             # Wähle optimale Agenten
-            selected_agents, decision = (
-                await self.meta_orchestrator.select_optimal_agents(
-                    subtask, agent_performance
-                )
+            selected_agents, decision = await self.meta_orchestrator.select_optimal_agents(
+                subtask, agent_performance
             )
 
             orchestration_decisions.append(decision)
@@ -144,9 +140,7 @@ class CognitiveSymphony:
 
                 # Lerne aus Erfolg
                 performance = 0.8  # Vereinfacht - würde in Produktion berechnet
-                await self.meta_orchestrator.learn_from_outcome(
-                    decision, "success", performance
-                )
+                await self.meta_orchestrator.learn_from_outcome(decision, "success", performance)
 
                 agent_interactions.append(
                     {
@@ -163,9 +157,7 @@ class CognitiveSymphony:
                 subtask.completed_at = datetime.now()
 
                 # Lerne aus Fehler
-                await self.meta_orchestrator.learn_from_outcome(
-                    decision, "failure", 0.2
-                )
+                await self.meta_orchestrator.learn_from_outcome(decision, "failure", 0.2)
 
                 agent_interactions.append(
                     {
@@ -190,9 +182,7 @@ class CognitiveSymphony:
 
         # 5. Self-Optimization
         if self.enable_learning:
-            await self.self_optimizer.optimize(
-                task_obj, subtasks, orchestration_decisions
-            )
+            await self.self_optimizer.optimize(task_obj, subtasks, orchestration_decisions)
 
         # 6. Learning Insights generieren
         learning_insights = self.meta_orchestrator.get_performance_metrics()
@@ -211,9 +201,7 @@ class CognitiveSymphony:
                 "subtasks_completed": len(
                     [s for s in subtasks if s.status == TaskStatus.COMPLETED]
                 ),
-                "subtasks_failed": len(
-                    [s for s in subtasks if s.status == TaskStatus.FAILED]
-                ),
+                "subtasks_failed": len([s for s in subtasks if s.status == TaskStatus.FAILED]),
             },
             execution_time=execution_time,
         )
@@ -227,7 +215,7 @@ class CognitiveSymphony:
 
         return result
 
-    def _combine_subtask_results(self, subtasks: List[Task]) -> Any:
+    def _combine_subtask_results(self, subtasks: list[Task]) -> Any:
         """
         Kombiniert die Ergebnisse aller Subtasks zu einer finalen Lösung
         """
@@ -239,9 +227,9 @@ class CognitiveSymphony:
                     {
                         "subtask": subtask.description,
                         "result": subtask.result,
-                        "agent": subtask.assigned_agent.value
-                        if subtask.assigned_agent
-                        else "unknown",
+                        "agent": (
+                            subtask.assigned_agent.value if subtask.assigned_agent else "unknown"
+                        ),
                     }
                 )
 
@@ -253,7 +241,7 @@ class CognitiveSymphony:
             "failed": len([s for s in subtasks if s.status == TaskStatus.FAILED]),
         }
 
-    async def analyze_performance(self) -> Dict[str, Any]:
+    async def analyze_performance(self) -> dict[str, Any]:
         """
         Analysiert die Gesamt-Performance des Systems
 
@@ -273,7 +261,7 @@ class CognitiveSymphony:
             "timestamp": datetime.now().isoformat(),
         }
 
-    def get_transparency_report(self, task_id: str) -> Dict[str, Any]:
+    def get_transparency_report(self, task_id: str) -> dict[str, Any]:
         """
         Generiert einen Transparenz-Report für eine spezifische Aufgabe
 
@@ -287,9 +275,7 @@ class CognitiveSymphony:
             return {"message": "Transparency layer is disabled"}
 
         # Hole alle relevanten Daten aus Memory
-        decisions = [
-            d for d in self.meta_orchestrator.decision_history if d.task_id == task_id
-        ]
+        decisions = [d for d in self.meta_orchestrator.decision_history if d.task_id == task_id]
 
         return {
             "task_id": task_id,

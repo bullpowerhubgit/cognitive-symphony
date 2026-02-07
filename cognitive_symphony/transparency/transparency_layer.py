@@ -11,10 +11,11 @@ Trackt und visualisiert:
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
+
 import structlog
 
-from cognitive_symphony.models import OrchestrationDecision, Task
+from cognitive_symphony.models import OrchestrationDecision
 
 logger = structlog.get_logger()
 
@@ -40,14 +41,12 @@ class TransparencyTracker:
         self.log_dir = Path(log_dir)
         self.log_dir.mkdir(parents=True, exist_ok=True)
 
-        self.decision_log: List[Dict[str, Any]] = []
-        self.interaction_log: List[Dict[str, Any]] = []
+        self.decision_log: list[dict[str, Any]] = []
+        self.interaction_log: list[dict[str, Any]] = []
 
         logger.info("transparency_tracker_initialized", log_dir=str(self.log_dir))
 
-    def log_decision(
-        self, decision: OrchestrationDecision, context: Dict[str, Any]
-    ) -> None:
+    def log_decision(self, decision: OrchestrationDecision, context: dict[str, Any]) -> None:
         """
         Loggt eine Orchestrierungs-Entscheidung
 
@@ -83,7 +82,7 @@ class TransparencyTracker:
         agent_type: str,
         action: str,
         result: Any,
-        metadata: Dict[str, Any],
+        metadata: dict[str, Any],
     ) -> None:
         """
         Loggt eine Agent-Interaktion
@@ -109,7 +108,7 @@ class TransparencyTracker:
 
         logger.debug("interaction_logged", task_id=task_id, agent=agent_type)
 
-    def generate_report(self, task_id: str) -> Dict[str, Any]:
+    def generate_report(self, task_id: str) -> dict[str, Any]:
         """
         Generiert einen Transparenz-Report für eine Aufgabe
 
@@ -136,7 +135,9 @@ class TransparencyTracker:
         }
 
         # Speichere Report
-        report_path = self.log_dir / f"report_{task_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        report_path = (
+            self.log_dir / f"report_{task_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
         with open(report_path, "w") as f:
             json.dump(report, f, indent=2)
 
@@ -145,8 +146,8 @@ class TransparencyTracker:
         return report
 
     def _create_timeline(
-        self, decisions: List[Dict], interactions: List[Dict]
-    ) -> List[Dict[str, Any]]:
+        self, decisions: list[dict], interactions: list[dict]
+    ) -> list[dict[str, Any]]:
         """Erstellt eine chronologische Timeline aller Events"""
         timeline = []
 
@@ -173,7 +174,7 @@ class TransparencyTracker:
 
         return timeline
 
-    def _persist_log(self, log_type: str, entry: Dict[str, Any]) -> None:
+    def _persist_log(self, log_type: str, entry: dict[str, Any]) -> None:
         """Persistiert Log-Einträge in Dateien"""
         date_str = datetime.now().strftime("%Y%m%d")
         log_file = self.log_dir / f"{log_type}_{date_str}.jsonl"
@@ -181,7 +182,7 @@ class TransparencyTracker:
         with open(log_file, "a") as f:
             f.write(json.dumps(entry) + "\n")
 
-    def get_metrics(self) -> Dict[str, Any]:
+    def get_metrics(self) -> dict[str, Any]:
         """Gibt Transparenz-Metriken zurück"""
         return {
             "total_decisions_logged": len(self.decision_log),
@@ -203,7 +204,7 @@ class PerformanceMonitor:
 
     def __init__(self):
         """Initialisiert den Performance Monitor"""
-        self.metrics: Dict[str, List[float]] = {
+        self.metrics: dict[str, list[float]] = {
             "task_execution_time": [],
             "success_rate": [],
             "agent_utilization": [],
@@ -226,7 +227,7 @@ class PerformanceMonitor:
 
         logger.debug("metric_recorded", metric=metric_name, value=value)
 
-    def get_statistics(self, metric_name: str) -> Dict[str, float]:
+    def get_statistics(self, metric_name: str) -> dict[str, float]:
         """
         Gibt Statistiken für eine Metrik zurück
 
@@ -249,9 +250,8 @@ class PerformanceMonitor:
             "latest": values[-1],
         }
 
-    def get_all_metrics(self) -> Dict[str, Dict[str, float]]:
+    def get_all_metrics(self) -> dict[str, dict[str, float]]:
         """Gibt alle Performance-Metriken zurück"""
         return {
-            metric_name: self.get_statistics(metric_name)
-            for metric_name in self.metrics.keys()
+            metric_name: self.get_statistics(metric_name) for metric_name in self.metrics.keys()
         }

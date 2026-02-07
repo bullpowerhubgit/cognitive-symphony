@@ -2,7 +2,8 @@
 Optimization Agent - Spezialisiert auf Performance- und Kostenoptimierung
 """
 
-from typing import Any, List
+from typing import Any
+
 from langchain.prompts import ChatPromptTemplate
 
 from cognitive_symphony.agents.base_agent import BaseAgent
@@ -15,7 +16,7 @@ class OptimizationAgent(BaseAgent):
     def __init__(self, llm: Any):
         super().__init__(AgentType.OPTIMIZATION, llm)
 
-    def _initialize_capabilities(self) -> List[AgentCapability]:
+    def _initialize_capabilities(self) -> list[AgentCapability]:
         return [
             AgentCapability(
                 name="Performance Optimization",
@@ -50,14 +51,14 @@ class OptimizationAgent(BaseAgent):
                 (
                     "system",
                     """Du bist ein Optimization Agent, spezialisiert auf Effizienzsteigerung.
-                    
+
                     Fähigkeiten:
                     - Performance-Optimierung (Code, Datenbank, Infrastruktur)
                     - Kostenoptimierung und ROI-Maximierung
                     - Workflow-Automatisierung
                     - Ressourcen-Allokation
                     - Bottleneck-Identifikation
-                    
+
                     Identifiziere Optimierungspotenziale und erstelle Verbesserungsvorschläge.
                     """,
                 ),
